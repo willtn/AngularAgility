@@ -20,13 +20,17 @@
         link: function ($scope, element, attrs) {
 
           var fullFieldPath = attrs.aaValMsgFor,
+            pathComponents = fullFieldPath.split('.'),
+            controllerAs = angular.isDefined(attrs.controllerAs),
+            formPath = controllerAs ? [pathComponents[0], pathComponents[1]].join('.') : fullFieldPath.substring(0, fullFieldPath.indexOf('.')),
             fieldInForm = $scope.$eval(fullFieldPath),
-            formObj = $scope.$eval(fullFieldPath.substring(0, fullFieldPath.indexOf('.')));
+            formObj = $scope.$eval(formPath);
 
           //TODO: if this is inside an isolate scope and the form is outside the isolate scope this doesn't work
           //could nest multiple forms so can't trust directive require and have to eval to handle edge cases...
           aaUtils.ensureaaFormExtensionsFieldExists(formObj, fieldInForm.$name);
-          var fieldInFormExtensions = $scope.$eval(fullFieldPath.replace('.', '.$aaFormExtensions.'));
+          var formExtensionsPath = controllerAs ? fullFieldPath.replace(formPath, formPath + '.$aaFormExtensions') : fullFieldPath.replace('.', '.$aaFormExtensions.'),
+            fieldInFormExtensions = $scope.$eval(formExtensionsPath);
 
           $scope.$watchCollection(
             function () {
