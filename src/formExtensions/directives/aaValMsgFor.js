@@ -54,7 +54,7 @@
                 showErrorReasons = watches[1],
                 focused = watches[2];
 
-              $scope.showMessages = (invalidAttempt || showErrorReasons.length) && !focused;
+              $scope.showMessages = !focused && (invalidAttempt || showErrorReasons.length);
             },
             true
           );
