@@ -309,12 +309,13 @@
                   fieldRefs.push(getFieldRef(fieldNameOrRef));
                 });
 
-
+                // This keeps track of all the upcoming listeners
+                var listeners = {};
                 //this removes the model error from ALL fields here when the model
                 //on any of them changes
                 var listenerFactory = function (ngModel) {
 
-                  var listener = function () {
+                  var listener = listeners[ngModel.$name] = function () {
 
                     ngModel.$setValidity(errorKeyName, true);
 
@@ -324,7 +325,8 @@
                     //don't remove before because angular is in a loop on $viewChangeListeners
                     $timeout(function () {
                       angular.forEach(fieldRefs, function (ref) {
-                        aaUtils.arrayRemove(ref.$ngModel.$viewChangeListeners, listener);
+                        ref.$ngModel.$setValidity(errorKeyName, true);
+                        aaUtils.arrayRemove(ref.$ngModel.$viewChangeListeners, listeners[ref.$ngModel.$name]);
                       });
                     });
                   };
