@@ -49,15 +49,13 @@
               });
             }
 
+            element.on('focus', function () {
+              scope.$evalAsync(field.$focused = true);
+            });
 
             element.on('blur', function () {
-              field.showErrorReasons.push('hadFocus');
+              scope.$evalAsync(field.$focused = false);
               element.addClass('aa-had-focus');
-
-              //want to call $apply after current stack clears
-              //if clicking on another element. better way?
-              $timeout(function () {
-              }, 1);
             });
 
             scope.$watch(function () {

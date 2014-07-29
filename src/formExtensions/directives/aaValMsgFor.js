@@ -45,14 +45,16 @@
             function () {
               return [
                 formObj.$aaFormExtensions.$invalidAttempt,
-                fieldInFormExtensions.showErrorReasons
+                fieldInFormExtensions.showErrorReasons,
+                fieldInFormExtensions.$focused
               ];
             },
             function (watches) {
               var invalidAttempt = watches[0],
-                showErrorReasons = watches[1];
+                showErrorReasons = watches[1],
+                focused = watches[2];
 
-              $scope.showMessages = invalidAttempt || showErrorReasons.length;
+              $scope.showMessages = (invalidAttempt || showErrorReasons.length) && !focused;
             },
             true
           );
