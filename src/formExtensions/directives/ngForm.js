@@ -323,7 +323,7 @@
                     //call
                     //schedule to remove after the stack clears as this is no longer needed
                     //don't remove before because angular is in a loop on $viewChangeListeners
-                    $timeout(function () {
+                    scope.$evalAsync(function () {
                       angular.forEach(fieldRefs, function (ref) {
                         ref.$ngModel.$setValidity(errorKeyName, true);
                         aaUtils.arrayRemove(ref.$ngModel.$viewChangeListeners, listeners[ref.$ngModel.$name]);
