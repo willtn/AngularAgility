@@ -66,6 +66,15 @@
               }
             });
 
+            if (angular.isDefined(attrs.aaDirtyShow) || aaFormExtensions.globalSettings.dirtyShow)
+              scope.$watch(function () {
+                return ngModel.$dirty;
+              }, function (val) {
+                if (val) {
+                  field.showErrorReasons.push('aa-dirty');
+                }
+              });
+
             //CHANGE TRACKING
             if (attrs.aaExcludeChanges === undefined) {
 

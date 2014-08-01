@@ -267,6 +267,7 @@
 
       //todo wire up
       this.globalSettings = {
+        dirtyShow: true,
         messageOnBlur: true
       };
 
