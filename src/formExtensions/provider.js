@@ -258,7 +258,8 @@
             });
 
             if (containsAllFields) {
-              form.$aaFormExtensions.$addValidationError(error.errorMessage, error.fieldNames);
+              // TODO: Configure to be able to add error key name
+              form.$aaFormExtensions.$addValidationError(error.errorMessage, null, error.fieldNames);
             }
           });
         });

@@ -288,7 +288,7 @@
             //add a validation error message for field(s)
             //allows for *multiple* fields to share the same validation message
             //allows for casing differences 'fieldName' <-> 'FieldName' for client/server simplicity
-            function $addValidationError(messageText, optionalFieldNamesOrFieldReferences /*nullable*/) {
+            function $addValidationError(messageText, optional$errorKeyName, optionalFieldNamesOrFieldReferences /*nullable*/) {
 
               if (!optionalFieldNamesOrFieldReferences) {
                 //this error will just exist but NOT attached to any field
@@ -300,10 +300,13 @@
                 return; //done!
               }
 
+              if (!optional$errorKeyName) {
+                optional$errorKeyName = messageText.replace(/[^a-z0-9]/gi, '-');
+              }
+
               if (angular.isArray(optionalFieldNamesOrFieldReferences)) {
                 //these fields share the same validation message
-                var fieldRefs = [],
-                  errorKeyName = messageText.replace(/[^a-z0-9]/gi, '-');
+                var fieldRefs = [];
 
                 angular.forEach(optionalFieldNamesOrFieldReferences, function (fieldNameOrRef) {
                   fieldRefs.push(getFieldRef(fieldNameOrRef));
@@ -317,7 +320,7 @@
 
                   var listener = listeners[ngModel.$name] = function () {
 
-                    ngModel.$setValidity(errorKeyName, true);
+                    ngModel.$setValidity(optional$errorKeyName, true);
 
                     //remove all listeners on all fields that exist under this $addValidationError
                     //call
@@ -325,7 +328,7 @@
                     //don't remove before because angular is in a loop on $viewChangeListeners
                     scope.$evalAsync(function () {
                       angular.forEach(fieldRefs, function (ref) {
-                        ref.$ngModel.$setValidity(errorKeyName, true);
+                        ref.$ngModel.$setValidity(optional$errorKeyName, true);
                         aaUtils.arrayRemove(ref.$ngModel.$viewChangeListeners, listeners[ref.$ngModel.$name]);
                       });
                     });
@@ -335,7 +338,7 @@
                 };
 
                 angular.forEach(fieldRefs, function (ref) {
-                  ref.$addError(messageText, errorKeyName, true);
+                  ref.$addError(messageText, optional$errorKeyName, true);
                   ref.$ngModel.$viewChangeListeners.unshift(listenerFactory(ref.$ngModel));
                 });
 
@@ -343,7 +346,7 @@
 //                                thisForm.$aaFormExtensions.$multiFieldValidationErrors
 //                                    .push({fields: fieldRefs, keyName: errorKeyName});
               } else {
-                getFieldRef(optionalFieldNamesOrFieldReferences).$addError(messageText);
+                getFieldRef(optionalFieldNamesOrFieldReferences).$addError(messageText, optional$errorKeyName);
               }
 
               function getFieldRef(fieldNameOrRef) {

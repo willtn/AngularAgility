@@ -151,10 +151,10 @@
                 });
               },
 
-              $addValidationError: function (messageText, optionalFieldNamesOrFieldReferences, targetFormName /*optional*/) {
+              $addValidationError: function (messageText, optional$errorKeyName, optionalFieldNamesOrFieldReferences, targetFormName /*optional*/) {
                 addTodo({
                   type: '$addValidationError',
-                  args: [messageText, optionalFieldNamesOrFieldReferences],
+                  args: [messageText, optional$errorKeyName, optionalFieldNamesOrFieldReferences],
                   targetFormName: targetFormName
                 });
               }
