@@ -46,7 +46,8 @@
             element.attr('aa-label', aaUtils.toTitleCase(aaUtils.splitCamelCase(lastPartOfName)));
           }
 
-          element.attr("aa-val-msg", "");
+          if (attrs.noValMsg === undefined)
+            element.attr("aa-val-msg", "");
 
           element.removeAttr('aa-field');
 
