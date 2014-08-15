@@ -17,7 +17,7 @@
           pre: function (scope, element, attrs, thisForm) {
 
             function setAttemptRecursively(form, isInvalid) {
-              form.$aaFormExtensions.$invalidAttempt = isInvalid;
+              form.$aaFormExtensions.$invalidAttempt = form.$aaFormExtensions.$showNotifications = isInvalid;
 
               angular.forEach(form.$aaFormExtensions.$childForms, function (childForm) {
                 setAttemptRecursively(childForm, isInvalid);
@@ -37,6 +37,7 @@
               $changeDependencies: [],
               $changed: false,
               $invalidAttempt: false,
+              $showNotifications: false,
               $addChangeDependency: $addChangeDependency,
 
               //reset all changes back to their original values per $changeDependencies
@@ -403,22 +404,26 @@
                   collection.push(val);
                 });
                 collection.push(form.$aaFormExtensions.$invalidAttempt);
+                collection.push(form.$aaFormExtensions.$showNotifications);
                 return collection;
 
               }, function () {
 
                 //should validation errors be displayed?
-                var shouldDisplay = form.$aaFormExtensions.$invalidAttempt && form.$invalid;
+                var shouldDisplay = false;
+                if (form.$aaFormExtensions.$showNotifications) {
+                  shouldDisplay = form.$aaFormExtensions.$invalidAttempt && form.$invalid;
 
-                //not yet... check to see if any fields have and reasons
-                //if there isnt a field then the error must show up
-                if (!shouldDisplay) {
-                  angular.forEach(form.$aaFormExtensions.$allValidationErrors, function (error) {
-                    if (!error.field || error.field.showErrorReasons.length) {
-                      shouldDisplay = true;
-                    }
-                  });
-                }
+                  //not yet... check to see if any fields have and reasons
+                  //if there isnt a field then the error must show up
+                  if (!shouldDisplay) {
+                    angular.forEach(form.$aaFormExtensions.$allValidationErrors, function (error) {
+                      if (!error.field || error.field.showErrorReasons.length) {
+                        shouldDisplay = true;
+                      }
+                    });
+                  }
+                }       
 
                 if (notifyHandle && !shouldDisplay) {
                   //remove the existing notification
@@ -431,6 +436,7 @@
                     validationErrorsToDisplay: validationErrorsToDisplay,
                     onClose: function () {
                       notifyHandle = null; //it'll come back on next error!
+                      form.$aaFormExtensions.$showNotifications = false;
                     }
                   }, notifyTargetName, 'aaFormExtensionsValidationErrors');
                 }
