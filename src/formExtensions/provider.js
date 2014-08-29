@@ -169,7 +169,7 @@
         //VERY basic. For the love of everything holy please do something better with UI Bootstrap modal or something!
         //requires >= v0.2.10!
         confirmUiRouterAndDom: function (rootFormScope, rootForm, $injector) {
-          var confirmationMessage  = 'You have unsaved changes are you sure you want to navigate away?';
+          var confirmationMessage  = 'You have unsaved changes. Are you sure you want to navigate away?';
 
           //ANGULAR UI ROUTER
           rootFormScope.$on('$stateChangeStart', function (event) {
